@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>后台登陆</title>
+    <link rel="stylesheet" type="text/css" href="/static/plugins/layui/css/layui.css">
+    <script type="text/javascript" src="/static/plugins/layui/layui.js"></script>
+    <script type="text/javascript" src="/static/jquery/jquery.js"></script>
+    <style type="text/css">
+        body {
+            background-color: lightpink;
+        }
+    </style>
+</head>
+<body>
+<div style="position: absolute;left: 50%;top: 50%;width: 500px;margin-left: -250px;margin-top: -200px;">
+    <div style="background: #ffffff;padding: 20px;border-radius: 4px;box-shadow:5px 5px 20px #444444;">
+        <div class="layui-form">
+            <div class="layui-form-item" style="color: gray;">
+                <h2>后台管理系统</h2>
+            </div>
+            <hr>
+            <div class="layui-form-item">
+                <label class="layui-form-label">用户名</label>
+                <div class="layui-input-block">
+                    <input type="text" class="layui-input" id="username">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">密&nbsp;&nbsp;&nbsp;&nbsp;码</label>
+                <div class="layui-input-block">
+                    <input type="password" class="layui-input" id="password">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">验证码</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input" id="verifycode">
+                </div>
+                <img src="{:captcha_src()}" alt="验证码" id="img">
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" id="login">登录</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    $(function () {
+        $('#login').click(function () {
+
+            $.post('{:url(\'Index/dologin\')}',
+                {
+                    'username': $('#username').val(),
+                    'password': $('#password').val(),
+                    'verifycode': $('#verifycode').val()
+                },
+                function (data) {
+
+                    if (data.res > 0) {
+                        alert(data.msg);
+                    } else {
+                        alert(data.msg);
+                        location.href = '{:url(\'Admin/index\')}'
+                    }
+
+
+                }
+            );
+        });
+        //下面是点击刷新验证码
+        $('#img').click(function () {
+            $('#img').attr('src', '{:captcha_src()}?rand=' + Math.random());
+        });
+        //下面是按回车键登陆
+        $('input').keydown(function (e) {
+            if (e.keyCode == 13) {
+                $('#login').trigger('click');
+            }
+        });
+    })
+</script>
+</html>
